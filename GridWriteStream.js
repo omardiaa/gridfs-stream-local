@@ -1,26 +1,27 @@
+const db = require("./Database")
 const EventEmitter = require("events");
+const fs = require("fs");
 
 class GridWriteStream extends EventEmitter {
   constructor(options = {}) {
     super(options);
+    this.filename = options.filename || "untitled.txt";
   }
+
   run() {
-    this.emit("open");
+    let self = this;
+
+    db.createFile({filename: this.filename, contentType: "text", length: 0}).then((file)=>{
+      fs.writeFile(this.filename, "text", function(err) {
+        if (err) {
+          //TODO: Remove file from database
+          self.emit("error");
+        }else{
+          self.emit("close",file);
+        }
+      });
+    });
   }
 }
 
-// const myEmitter = new GridWriteStream();
-// myEmitter.on("func", () => {
-//   console.log("an event occurred!");
-// });
-// myEmitter.func();
-// function GridWriteStream() {}
-
-// GridWriteStream.addEventListener(
-//   "build",
-//   function(e) {
-//     /* ... */
-//   },
-//   false
-// );
 module.exports = exports = GridWriteStream;
