@@ -13,6 +13,13 @@ To connect to a different database, change the uri in the Database.js file to th
 1. NodeJS "events" package
 2. NodeJS "mongodb" package
 
+## How to migrate from gridfs-stream to gridfs-stream-local?
+
+Leave all the gridfs-stream code as is. All what you need to do is 2 things:
+
+1. Import Grid from gridfs-stream-local rather than from gridfs-stream
+2. Call `run()` member function inside the object returned by both createWriteStream and createReadStream. Check the sample code at index.js to understand more.
+
 ## Limitations
 
 1. GridReadStream reads files given only their id. It does not handle retrieving files by any other parameters.
