@@ -1,18 +1,28 @@
+const db = require("./Database")
 const EventEmitter = require("events");
 const fs = require("fs");
 
 class GridReadStream extends EventEmitter {
   constructor(options = {}) {
     super(options);
-    this.filename = options.filename || "untitled.txt";
+    this._id = options._id || "";
   }
 
   run() {
     let self = this;
-    fs.writeFile(this.filename, "", function(err) {
-      if (err) self.emit("error");
-      self.emit("open");
-    });
+    db.getFile(this._id).then(file=>{
+      fs.readFile(file.filename, (err, data)=>{
+        if(err){
+          self.emit("error",err);
+          return;
+        }
+        self.emit("data", data);
+
+      })
+    }).catch(err=>{
+      self.emit("error",err);
+    })
+    
   }
 }
 

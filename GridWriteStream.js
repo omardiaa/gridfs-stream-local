@@ -12,14 +12,17 @@ class GridWriteStream extends EventEmitter {
     let self = this;
 
     db.createFile({filename: this.filename, contentType: "text", length: 0}).then((file)=>{
-      fs.writeFile(this.filename, "text", function(err) {
+      fs.writeFile(this.filename, "text", err => {
         if (err) {
           //TODO: Remove file from database
-          self.emit("error");
-        }else{
-          self.emit("close",file);
+          self.emit("error",err);
+          return;
         }
+        self.emit("close",file);
+        
       });
+    }).catch(err=>{
+      self.emit("error",err)
     });
   }
 }

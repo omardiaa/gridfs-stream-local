@@ -29,8 +29,14 @@ const createFile =async (p_file) =>{
     let dbFile = await newFile.save();
     return(dbFile)
 }
+
+const getFile = async (id) => {
+    let dbFile = await File.findOne({_id: id})
+    return(dbFile)
+}
 module.exports = {
-    createFile
+    createFile,
+    getFile
 }
 
 //https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/mongoose
